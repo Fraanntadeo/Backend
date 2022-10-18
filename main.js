@@ -58,9 +58,9 @@ class Contenedor {
     }
 }
 
-const newArchivo = new Contenedor("./productos.txt");
-newArchivo.save({ title: "Zapatilla nike", price: 37800, thumbnail: "https://http2.mlstatic.com/D_NQ_NP_815737-MLA49633340124_042022-O.webp" }).then(resolve => console.log(resolve));
-newArchivo.getById(1).then(resolve => console.log(resolve));
-newArchivo.getAll().then(resolve => console.log(resolve));
-newArchivo.deleteById(2);
-newArchivo.deleteAll();
+const nuevoArchivo = new Contenedor("./productos.txt");
+nuevoArchivo.save({ title: "Zapatilla nike", price: 37800, thumbnail: "https://http2.mlstatic.com/D_NQ_NP_815737-MLA49633340124_042022-O.webp" }).then(resolve => console.log(resolve));
+nuevoArchivo.getById(1).then(resolve => console.log(resolve));
+nuevoArchivo.getAll().then(resolve => console.log(resolve));
+nuevoArchivo.deleteById(2);
+nuevoArchivo.deleteAll();
