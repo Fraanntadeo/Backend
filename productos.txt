@@ -1,0 +1,1 @@
+[{"title":"Zapatilla nike","price":37800,"thumbnail":"https://http2.mlstatic.com/D_NQ_NP_815737-MLA49633340124_042022-O.webp","id":1}]

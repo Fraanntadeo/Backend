@@ -1,45 +1,66 @@
-class Usuario {
-    constructor(nombre, apellido, libros, mascotas) {
-        this._nombre = nombre;
-        this._apellido = apellido;
-        this._libros = libros;
-        this._mascotas = mascotas;;
+const fs = require('fs')
+class Contenedor {
+    constructor(nombre) {
+        this.algo = nombre;
     }
-    getFullName() {
-        return `${this._nombre} ${this._apellido}`;
+    async save(object) {
+        let array = []
+        try {
+            const data = await fs.promises.readFile(this.algo, "utf-8")
+            array = JSON.parse(data)
+            let idArray = array.map(obj => obj.id)
+            let highId = Math.max(...idArray)
+            object.id = highId + 1;
+            array.push(object);
+            fs.writeFileSync(this.algo, JSON.stringify(array))
+        }
+        catch {
+            object.id = 1;
+            array.push(object);
+            fs.writeFileSync(this.algo, JSON.stringify(array))
+        }
+        return object.id
     }
-    addMascota(nombreMascota) {
-        this._mascotas.push(nombreMascota);
+    async getById(number) {
+        try {
+            const data = await fs.promises.readFile(this.algo, "utf-8")
+            let array = JSON.parse(data)
+            const object = array.find(obj => obj.id === number)
+            return object
+        }
+        catch {
+            return null
+        }
     }
-    countMascotas() {
-        return this._mascotas.length;
+    async getAll() {
+        try {
+            const data = await fs.promises.readFile(this.algo, "utf-8")
+            const array = JSON.parse(data)
+            return array
+        }
+        catch {
+            return null
+        }
     }
-    addBook(titulo, nombreAutor) {
-        this._libros.push({ nombre: titulo, autor: nombreAutor })
+    async deleteById(number) {
+        try {
+            const data = await fs.promises.readFile(this.algo, "utf-8")
+            const array = JSON.parse(data)
+            const newArray = array.filter(obj => obj.id !== number)
+            fs.writeFileSync(this.algo, JSON.stringify(newArray))
+        }
+        catch {
+            return "No hay nada"
+        }
     }
-    getBookNames() {
-        return this._libros.map((libro) => libro.nombre)
+    deleteAll() {
+        fs.writeFileSync(this.algo, "")
     }
 }
 
-const libros = [
-    {
-        nombre: "Rebelión en la granja",
-        autor: "George Orwell"
-    },
-    {
-        nombre: "Sin blanca en Paris y Londres",
-        autor: "George Orwell"
-    }
-
-]
-
-const randomGuy = new Usuario("Juan", "Perez", libros, ["Perro", "Gato"])
-
-console.log(randomGuy.getFullName());
-console.log(randomGuy.getBookNames());
-randomGuy.addBook("Arte abstracto y arte figurativo", "SALVAT")
-console.log(randomGuy.getBookNames());
-console.log(randomGuy.countMascotas());
-randomGuy.addMascota('Canario');
-console.log(randomGuy.countMascotas()); 
+const newArchivo = new Contenedor("./productos.txt");
+newArchivo.save({ title: "Zapatilla nike", price: 37800, thumbnail: "https://http2.mlstatic.com/D_NQ_NP_815737-MLA49633340124_042022-O.webp" }).then(resolve => console.log(resolve));
+newArchivo.getById(1).then(resolve => console.log(resolve));
+newArchivo.getAll().then(resolve => console.log(resolve));
+newArchivo.deleteById(2);
+newArchivo.deleteAll();
