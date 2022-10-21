@@ -61,7 +61,7 @@ class Contenedor {
     }
 }
 
-const nuevoArchivo = new Contenedor("./productos.txt");
+const nuevoArchivo = new Contenedor("./productos.json");
 const app = express();
 const PORT = 8080;
 const server = app.listen(PORT, () => {
