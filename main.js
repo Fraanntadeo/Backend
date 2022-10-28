@@ -1,87 +1,59 @@
-const fs = require('fs')
 const express = require('express');
-
-
-class Contenedor {
-    constructor(nombre) {
-        this.object = nombre;
-    }
-    async save(object) {
-        let array = []
-        try {
-            const data = await fs.promises.readFile(this.object, "utf-8")
-            array = JSON.parse(data)
-            let idArray = array.map(obj => obj.id)
-            let highId = Math.max(...idArray)
-            object.id = highId + 1;
-            array.push(object);
-            fs.writeFileSync(this.object, JSON.stringify(array))
-        }
-        catch {
-            object.id = 1;
-            array.push(object);
-            fs.writeFileSync(this.object, JSON.stringify(array))
-        }
-        return object.id
-    }
-    async getById(number) {
-        try {
-            const data = await fs.promises.readFile(this.object, "utf-8")
-            let array = JSON.parse(data)
-            const object = array.find(obj => obj.id === number)
-            return object
-        }
-        catch {
-            return null
-        }
-    }
-    async getAll() {
-        try {
-            const data = await fs.promises.readFile(this.object, "utf-8")
-            const array = JSON.parse(data)
-            return array
-        }
-        catch {
-            return null
-        }
-    }
-    async deleteById(number) {
-        try {
-            const data = await fs.promises.readFile(this.object, "utf-8")
-            const array = JSON.parse(data)
-            const newArray = array.filter(obj => obj.id !== number)
-            fs.writeFileSync(this.object, JSON.stringify(newArray))
-        }
-        catch {
-            return "No hay nada"
-        }
-    }
-    deleteAll() {
-        fs.writeFileSync(this.object, "")
-    }
-}
-
-const nuevoArchivo = new Contenedor("./productos.json");
+const { Router } = express;
+const productosRouter = new Router();
 const app = express();
-const PORT = 8080;
-const server = app.listen(PORT, () => {
-    console.log(`${server.address().port}`)
-})
 
+app.use("/static", express.static(__dirname + "public"))
+const PORT = process.env.PORT || 8080;
+const server = app.listen(PORT, () => {
+    console.log(`Servidor http escuchando en el puerto http://localhost:${server.address().port}`)
+})
 server.on("error", error => console.log(`Error en servidor ${error}`))
 
-app.get('/', (req, res) => {
-    res.end("Bienvenido a ...!")
-})
-app.get('/productos', (req, res) => {
-    nuevoArchivo.getAll().then(resolve => {
-        res.end(`todo los productos: ${JSON.stringify(resolve)}`)
-    });
+productosRouter.use(express.json())
+productosRouter.use(express.urlencoded({ extended: true }))
 
+
+const productos = []
+productosRouter.get("/", (res) => {
+    res.json(productos)
 })
-app.get('/productoRandom', (req, res) => {
-    let fRandom = parseInt((Math.random() * 4) + 1)
-    nuevoArchivo.getById(fRandom).then(resolve => {
-        res.end(`producto random: ${JSON.stringify(resolve)}`)
-    });
+productosRouter.get("/:id", (req, res) => {
+    let id = parseInt(req.params.id);
+    let objeto = productos.find(item => item.id == id);
+    res.json(objeto ? objeto : { error: "producto no encontrado" });
+})
+
+productosRouter.post("/", (req, res) => {
+    let objeto = req.body;
+    if (productos.length != 0) {
+        let arrayId = productos.map(item => item.id);
+        let highId = Math.max(...arrayId);
+        objeto.id = highId + 1;
+    } else objeto.id = 1;
+
+    productos.push(objeto);
+    res.json(objeto);
+})
+productosRouter.put("/:id", (req, res) => {
+    let id = parseInt(req.params.id);
+    req.body.id = id;
+    let objeto = req.body;
+    const auxArray = productos.map(item => item.id == id ? objeto : item);
+    productos.splice(0);
+    productos.push(...auxArray);
+    res.json(objeto);
+})
+
+productosRouter.delete("/:id", (req, res) => {
+    let id = parseInt(req.params.id);
+    let auxArray = productos.filter(item => item.id != id);
+    productos.splice(0);
+    productos.push(...auxArray);
+    res.json(productos);
+})
+app.use("/api/productos", productosRouter);
+app.use('/static', express.static('public'));
+app.use((req, res, next) => {
+    res.status(404).send("Que buscas ?");
 })
