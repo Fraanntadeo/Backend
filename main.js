@@ -15,7 +15,7 @@ productosRouter.use(express.urlencoded({ extended: true }))
 
 
 const productos = []
-productosRouter.get("/", (res) => {
+productosRouter.get("/", (req, res) => {
     res.json(productos)
 })
 productosRouter.get("/:id", (req, res) => {
@@ -55,5 +55,5 @@ productosRouter.delete("/:id", (req, res) => {
 app.use("/api/productos", productosRouter);
 app.use('/static', express.static('public'));
 app.use((req, res, next) => {
-    res.status(404).send("Que buscas ?");
+    res.status(404).send("Que buscas?");
 })
