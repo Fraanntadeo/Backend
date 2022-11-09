@@ -1,5 +1,5 @@
 const Contenedor = require('./ContArchivo.js')
-const contenedorProducts = new Contenedor('./productos.txt')
+const contenedorProducts = new Contenedor('./productos.json')
 const idFunction = async () => {
     const productos = await contenedorProducts.retrieve()
     if (productos.length != 0) {

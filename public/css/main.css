@@ -3,15 +3,15 @@
 }
 
 .userName {
-    color: blue;
+    color: rgb(39, 35, 35);
 }
 
 .userDate {
-    color: #BC5B8C;
+    color: #6e656a;
 }
 
 .userMsg {
     display: inline-block;
     font-style: italic;
-    color: #6EAC55;
+    color: #1f221e;
 }

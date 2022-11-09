@@ -1,8 +1,0 @@
-[
-    {
-        "title": "Samsung s21 FE",
-        "price": "189.999",
-        "thumbnail": "https://http2.mlstatic.com/D_NQ_NP_730981-MLA48800008115_012022-O.webp",
-        "id": 0
-    }
-]
