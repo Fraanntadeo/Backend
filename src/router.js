@@ -4,13 +4,10 @@ const { Router } = require('express')
 const Container = require("./ContArchivo")
 const archivoProducts = new Container('./productos.txt');
 const archivoCarr = new Container('./carrito.txt');
-
 const routerSesion = new Router()
-
 const routerProd = new Router()
 routerProd.use(express.json())
 routerProd.use(express.urlencoded({ extended: true }))
-
 const routerCarr = new Router()
 routerCarr.use(express.json())
 routerCarr.use(express.urlencoded({ extended: true }))
