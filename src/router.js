@@ -4,7 +4,9 @@ const { Router } = require('express')
 const Container = require("./ContArchivo")
 const archivoProducts = new Container('./productos.txt');
 const archivoCarr = new Container('./carrito.txt');
+
 const routerSesion = new Router()
+
 const routerProd = new Router()
 routerProd.use(express.json())
 routerProd.use(express.urlencoded({ extended: true }))
@@ -14,7 +16,6 @@ routerCarr.use(express.json())
 routerCarr.use(express.urlencoded({ extended: true }))
 
 let admin = false;
-//Verify if admin is true?
 function soloParaAdmins(req, res, next) {
     if (admin) {
         next()
@@ -24,13 +25,16 @@ function soloParaAdmins(req, res, next) {
     }
 }
 
+
 const getDate = () => {
     const today = moment();
     return today.format("DD/MM/YYYY HH:mm:ss")
 }
+
 const generateCode = async () => {
     const dataProducts = await archivoProducts.retrieve()
     let salir = true;
+
     while (salir) {
         let code = parseInt(Math.random() * 100) + 1
         const codeExist = dataProducts.find(element => element.code == code)
@@ -40,6 +44,7 @@ const generateCode = async () => {
     }
 
 }
+
 
 routerSesion.get('/login', (req, res) => {
     admin = true
@@ -57,7 +62,6 @@ routerProd.get("/", (req, res) => {
     })
 
 })
-
 routerProd.get("/:id", (req, res) => {
     let id = parseInt(req.params.id);
     archivoProducts.retrieveId(id).then(prods => {
@@ -109,13 +113,13 @@ routerCarr.delete("/:id", (req, res) => {
     })
 
 })
-
 routerCarr.get("/:id/productos", (req, res) => {
     const id = parseInt(req.params.id);
     archivoCarr.retrieveId(id).then(carrito => {
         res.json(carrito.productos)
     })
 })
+
 routerCarr.post("/:id/productos/", (req, res) => {
     const id = parseInt(req.params.id);
     const id_prod = req.body.id;
