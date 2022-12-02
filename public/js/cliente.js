@@ -6,10 +6,12 @@ btnEnviar.onclick = () => {
     const thumbnail = document.getElementById('img').value;
     socket.emit('addProduct', { title, price, thumbnail })
 }
+
 const getDate = () => {
     const today = moment();
     return today.format("DD/MM/YYYY HH:mm:ss")
 }
+
 const btnChat = document.getElementById("enviarMsg");
 btnChat.onclick = () => {
     const userName = document.getElementById('nameUser').value;
@@ -19,10 +21,13 @@ btnChat.onclick = () => {
     document.getElementById('nameUser').value = "";
     document.getElementById('msg').value = "";
 }
+
 socket.on('conexion', msg => {
     socket.emit('getProducts')
 })
+
 socket.on('mensajes', mensajes => {
+    console.log(mensajes)
     document.getElementById("chatText").innerHTML = `<ul>
     ${mensajes.map(dataCliente => {
         return (`<li class="listaMsg">
@@ -32,6 +37,7 @@ socket.on('mensajes', mensajes => {
     </ul>
 `
 })
+
 socket.on('showProducts', productos => {
     if (productos.length != 0) {
         showTable();
@@ -40,6 +46,7 @@ socket.on('showProducts', productos => {
         showNoProducts();
     }
 })
+
 const showNoProducts = () => {
     document.getElementById('products').innerHTML = `<div id="noProducts">
     <h3>No hay producto</h3>
@@ -61,7 +68,7 @@ const showTable = () => {
 }
 const upDateTable = (productos) => {
     const contenido = productos.map(product => {
-        return (`<tr><td>${product.title}</td><td>$${product.price}</td><td><img src="${product.thumbnail}" alt="${product.title}" width="50px" height="50px"></td></tr>`)
+        return (`<tr><td>${product.title}</td><td>$${new Intl.NumberFormat('es-MX').format(product.price)}</td><td><img src="${product.thumbnail}" alt="${product.title}" width="50px" height="50px"></td></tr>`)
     }).join('');
     document.getElementById('tablaProducts').innerHTML = contenido;
 }
