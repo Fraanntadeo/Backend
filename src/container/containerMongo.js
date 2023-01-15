@@ -1,7 +1,10 @@
-import { MongoClient, ObjectId, ServerApiVersion } from 'mongodb';
-const uri = "mongodb+srv://Prueba:Messi@cluster0.r53ktcl.mongodb.net/?retryWrites=true&w=majority";
+const { MongoClient, ServerApiVersion } = require('mongodb');
+const uri = "mongodb+srv://fraanntadeo:<password>@cluster0.2wrrdyg.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-await client.connect()
+client.connect(err => {
+  const collection = client.db("test").collection("devices");
+  client.close();
+});
 
 class ContainerMongo {
     constructor(nameCollection) {
