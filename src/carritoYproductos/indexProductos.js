@@ -1,22 +1,22 @@
 import typeDB from "./typeDB.js"
-let productoDao
+let producto
 switch (typeDB) {
     case 'json':
-        const { default: ProductoDaoArchivo } = await import('./productos/productosArchivo.js')
-        productoDao = new ProductoDaoArchivo("./DB")
+        const { default: ProductoArchivo } = await import('./productos/productosArchivo.js')
+        producto = new ProductoArchivo("./DB")
         break
     case 'firebase':
-        const { default: ProductoDaoFirebase } = await import('./productos/productosFirebase.js')
-        productoDao = new ProductoDaoFirebase()
+        const { default: ProductoFirebase } = await import('./productos/productosFirebase.js')
+        producto = new ProductoFirebase()
         break
     case 'mongodb':
-        const { default: ProductoDaoMongoDb } = await import('./productos/productosMongo.js')
-        productoDao = new ProductoDaoMongoDb()
+        const { default: ProductoMongoDb } = await import('./productos/productosMongo.js')
+        producto = new ProductoMongoDb()
         break
     default:
-        const { default: ProductoDaoMem } = await import('./productos/productosMemoria.js')
-        productoDao = new ProductoDaoMem()
+        const { default: ProductoMem } = await import('./productos/productosMemoria.js')
+        producto = new ProductoMem()
         break
 }
 
-export default productoDao
+export default producto
